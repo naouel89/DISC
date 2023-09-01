@@ -1,0 +1,72 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des disques (15)</title>
+    <style>
+        .disc-column {
+            float: left;
+            width: 50%;
+            box-sizing: border-box;
+            padding: 0 10px;
+        }
+        .disc-info {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .disc-image img {
+            max-width: 100%;
+            max-height: 150px;
+            height: auto;
+        }
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+        .title {
+            flex: 1;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <div class="title">Liste des disques (<?= count($tableau) ?>)</div>
+        <a href="add_form.php" class="btn btn-primary">Ajouter</a>
+    </div>
+    
+    <div class="disc-column">
+        <?php foreach ($firstColumn as $disc): ?>
+            <div class="disc-info">
+                <div class="disc-image">
+                    <img src="<?= $disc->disc_picture ?>" alt="<?= $disc->disc_title ?>">
+                </div>
+                <div class="disc-details">
+                    <h2><?= $disc->disc_title ?></h2>
+                    <p><strong>Label:</strong> <?= $disc->disc_label ?></p>
+                    <p><strong>Genre:</strong> <?= $disc->disc_genre ?></p>
+                    <p><strong>Year:</strong> <?= $disc->disc_year ?></p>
+                    <a href="details_disc.php?disc_id=<?= $disc->disc_id ?>" class="btn btn-primary">Détails</a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="disc-column">
+        <?php foreach ($secondColumn as $disc): ?>
+            <div class="disc-info">
+                <div class="disc-image">
+                    <img src="<?= $disc->disc_picture ?>" alt="<?= $disc->disc_title ?>">
+                </div>
+                <div class="disc-details">
+                    <h2><?= $disc->disc_title ?></h2>
+                    <p><strong>Label:</strong> <?= $disc->disc_label ?></p>
+                    <p><strong>Genre:</strong> <?= $disc->disc_genre ?></p>
+                    <p><strong>Year:</strong> <?= $disc->disc_year ?></p>
+                    <a href="details_disc.php?disc_id=<?= $disc->disc_id ?>" class="btn btn-primary">Détails</a>
+                </div>
+            </div>
+        
+    </div>
+    <div style="clear: both;"></div>
+</body>
+</html>
