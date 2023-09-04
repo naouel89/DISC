@@ -1,80 +1,86 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter un disque</title>
-    <!-- Ajout des liens Bootstrap pour le style (facultatif) -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>Ajouter un disque</h1>
-        <form action="add_script.php" method="post" enctype="multipart/form-data">
-            <!-- Champ pour le titre du disque -->
-            <div class="form-group">
-                <label for="disc_title">Titre du disque:</label>
-                <input type="text" class="form-control" name="disc_title" id="disc_title" required>
-            </div>
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Modifier le disque</title>
+        <!-- Intégration de Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <?php
+            $db = new PDO('mysql:host=localhost;charset=utf8;dbname=record', 'root', '1234');
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            <!-- Champ pour l'année du disque -->
-            <div class="form-group">
-                <label for="disc_year">Année:</label>
-                <input type="text" class="form-control" name="disc_year" id="disc_year" required>
-            </div>
+            $requete = $db->prepare("SELECT * FROM disc WHERE disc_id = ?");
+            $requete->execute(array($_GET["disc_id"]));
+            $disc = $requete->fetch(PDO::FETCH_OBJ);
+            ?>
 
-            <!-- Champ pour le prix du disque -->
-            <div class="form-group">
-                <label for="disc_price">Prix :</label>
-                <input type="text" name="disc_price" id="disc_price" class="form-control" required>
-            </div>
-            
-            <!-- Champ pour l'image du disque -->
-            <div class="form-group">
-                <label for="disc_picture">Image :</label>
-                <input type="file" name="disc_picture" id="disc_picture" class="form-control-file" required>
-            </div>
+            <h1 class="mt-5">Modifier le disque</h1>
+            <form action="update_script.php" method="post" enctype="multipart/form-data" class="mt-4">
+                <input type="hidden" name="disc_id" value="<?= $disc->disc_id ?>">
 
-            <!-- Champ pour le label du disque -->
-            <div class="form-group">
-                <label for="disc_label">Label:</label>
-                <input type="text" class="form-control" name="disc_label" id="disc_label" required>
-            </div>
+                <div class="form-group">
+                    <label for="disc_title">Titre:</label>
+                    <input type="text" name="disc_title" value="<?= $disc->disc_title ?>" class="form-control">
+                </div>
 
-            <!-- Champ pour le genre du disque -->
-            <div class="form-group">
-                <label for="disc_genre">Genre:</label>
-                <input type="text" class="form-control" name="disc_genre" id="disc_genre" required>
-            </div>
+                <div class="form-group">
+                    <label for="disc_label">Label:</label>
+                    <input type="text" name="disc_label" value="<?= $disc->disc_label ?>" class="form-control">
+                </div>
 
-            <!-- Sélection de l'artiste associé -->
-            <div class="form-group">
+                <div class="form-group">
+                    <label for="disc_year">Année:</label>
+                    <input type="text" name="disc_year" value="<?= $disc->disc_year ?>" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="disc_genre">Genre:</label>
+                    <input type="text" name="disc_genre" value="<?= $disc->disc_genre ?>" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="disc_price">Prix:</label>
+                    <input type="text" name="disc_price" value="<?= $disc->disc_price ?>" class="form-control">
+                </div>
+                 <!-- Liste déroulante pour sélectionner l'artiste du disque -->
+                <div class="form-group">
                 <label for="artist_id">Artiste:</label>
-                <select class="form-control" name="artist_id" id="artist_id" required>
+                <select name="artist_id" id="artist_id" class="form-control" required>
+                    <option value="">Sélectionnez un artiste</option>
                     <?php
-                    try {
-                        // Connexion à la base de données MySQL
-                        $db = new PDO('mysql:host=localhost;charset=utf8;dbname=record', 'root', '1234');
-                        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                        // Récupération de la liste des artistes depuis la base de données
-                        $requete = $db->query("SELECT * FROM artist ORDER BY artist_name ASC");
-                        while ($artist = $requete->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $artist['artist_id'] . "'>" . $artist['artist_name'] . "</option>";
-                        }
-                    } catch (PDOException $e) {
-                        echo "Erreur : " . $e->getMessage();
-                        die();
+                    $db = new PDO('mysql:host=localhost;charset=utf8;dbname=record', 'root', '1234');
+                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                 
+                    // Récupération de la liste des artistes depuis la base de données
+                    $requete = $db->query("SELECT * FROM artist");
+                    while ($artist = $requete->fetch(PDO::FETCH_ASSOC)) {
+                        // Création des options de la liste déroulante avec les noms des artistes et leurs IDs
+                        echo "<option value='" . $artist['artist_id'] . "'>" . $artist['artist_name'] . "</option>";
                     }
                     ?>
-                </select>
-            </div>
 
-            <!-- Bouton pour soumettre le formulaire -->
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-            
-            <!-- Lien pour retourner à la liste des disques -->
-            <a href="index.php" class="btn btn-secondary">Retour</a>
-        </form>
-    </div>
-</body>
-</html>
+                <div class="form-group">
+                <label for="disc_picture">Image actuelle :</label>
+                <img src="<?= $disque_data['image'] ?>" alt="Image actuelle" width="150">
+                </div>
+
+                <div class="form-group">
+                <label for="disc_new_picture">Nouvelle image :</label>
+                <input type="file" name="disc_new_picture" class="form-control-file">
+                </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            </form>
+        </div>
+
+        <!-- Intégration de Bootstrap JS (facultatif) -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
