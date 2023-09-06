@@ -57,7 +57,7 @@ try {
             <!-- Liens pour Modifier, Supprimer et Retour -->
             <div class="mt-3">
                 <a href="update_form.php?disc_id=<?= $discId ?>" class="btn btn-primary">Modifier</a>
-                <a href="delete.php?disc_id=<?= $discId ?>" class="btn btn-danger">Supprimer</a>
+                <a href="delete_form.php?disc_id=<?= $discId ?>" class="btn btn-danger">Supprimer</a>
                 <a href="index.php" class="btn btn-primary">Retour à la liste</a>
             </div>
         <?php else: ?>
